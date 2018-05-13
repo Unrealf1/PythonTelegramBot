@@ -17,53 +17,33 @@ def start(bot, update):
 
 def help(bot, update):
     """Send a message when the command /help is issued."""
-    update.message.reply_text('''В Москве на проспекте Академика Сахарова прошла акция партии ПАРНАС в поддержку заблокированного Роскомнадзором мессенджера Telegram, передает корреспондент РБК. Сбор участников начался в 13:00 мск на улице Маши Порываевой возле станции метро «Комсомольская».
-Пивоваров.
-<div class="article__inline-material">
-<a class="article__inline-material__title" href="https://www.rbc.ru/society/08/05/2018/5af19cc29a7947809dc5fc7d">
-        Вторая акция в поддержку Telegram пройдет 13 мая на проспекте Сахарова
-    </a>
-<div class="article__inline-material__bottom">
-<a class="article__inline-material__category" href="/society">
-            Общество
-        </a>
-</div>
-</div>​
-Также на мероприятии присутствует председатель ПАРНАСа​ Михаил Касьянов. «Мы должны поддержать [основателя Telegram Павла] Дурова в борьбе за свободу интернета и Telegram, продолжать выходить на митинги и дальше», — призвал он.
-Разблокировать мессенджер, возместить его владельцам ущерб от его блокировки и отправить в отставку Роскомнадзор со сцены потребовала другой организатор митинга, председатель партии «Яблоко» Эмилия Слабунова.​ Толпа откликнулась на ее призывы криками: «Надоел!» и «Свобода СМИ!»
+    update.message.reply_text('''<html><body>Постоянное представительство России при Организации по запрещению химического оружия (ОЗХО) получило ответы на свои вопросы, которые возникли после публикации ОЗХО доклада по «делу Скрипаля». Об этом  сообщил постпред России при организации Александр Шульгин.
+«У нас возникли вопросы к этому докладу, в частности, складывалось впечатление, что эксперты организации искали только то вещество, которое указали британцы. Непонятно было, откуда взялся [химикат] BZ, почему нужно было проверять сертифицированную лабораторию, посылать туда контрольную пробу», — сказал он.
 
-<div class="article__photoreport">
-<a class="article__photoreport__title" href="https://www.rbc.ru/photoreport/13/05/2018/5af82f309a79476510244366">
-        Второй митинг в поддержку Telegram в Москве. Фоторепортаж
-        <span class="article__photoreport__image-container">
-<span class="article__photoreport__image-wrap">
-<span class="article__photoreport__image-wrap__inner">
-<img class="article__photoreport__image" src="https://s0.rbk.ru/v6_top_pics/resized/240x120_crop/media/img/4/42/755262148081424.jpg"/>
-</span>
-</span>
-<span class="article__photoreport__image-wrap">
-<span class="article__photoreport__image-wrap__inner">
-<img class="article__photoreport__image" src="https://s0.rbk.ru/v6_top_pics/resized/240x120_crop/media/img/6/62/755262150285626.jpg"/>
-</span>
-</span>
-<span class="article__photoreport__image-wrap">
-<span class="article__photoreport__image-wrap__inner">
-<img class="article__photoreport__image" src="https://s0.rbk.ru/v6_top_pics/resized/240x120_crop/media/img/1/18/755262148080181.jpg"/>
-</span>
-</span>
-<span class="article__photoreport__image-wrap">
-<span class="article__photoreport__image-wrap__inner last">
-<img class="article__photoreport__image" src="https://s0.rbk.ru/v6_top_pics/resized/240x120_crop/media/img/3/30/755262154301303.jpg"/>
-<span class="article__photoreport__more">Еще 5 фото</span>
-</span>
-</a>
-<div class="article__photoreport__bottom">
-<a class="article__photoreport__category" href="/multimedia">
-            Фотогалерея
-        </a>
-<span class="icons__photo"></span>
+
+        Спор на новом уровне: чего ждать Москве от доклада ОЗХО о «деле Скрипаля»
+    
+
+
+            Политика
+        
+
+
+По словам Шульгина, ответ ОЗХО — «сугубо технический», его необходимо изучить на экспертном уровне. «Дальше мы будем уже определяться», — добавил он. Как отметил дипломат, по данным российской стороны, ОЗХО сейчас «не играет никакой роли в расследовании инцидента в Солсбери».
+
+
+        Лавров рассказал о признаках отравления Скрипалей веществом BZ
+    
+
+
+            Политика
+        
+
 </div>
-</div>''')
+Группа экспертов ОЗХО по запросу Лондона начала расследование «дела Скрипаля» в середине марта. 11 апреля организация передала полную версию отчета Великобритании. На следующий день по просьбе британской стороны ОЗХО распространила рассекреченное резюме документа.
+В организации подтвердили, что при отравлении бывшего полковника ГРУ Сергея Скрипаля и его дочери Юлии <a href="https://www.rbc.ru/politics/12/04/2018/5acf2ccc9a794721fa1bfbcd">было использовано</a> нервно-паралитическое вещество «Новичок». При этом ОЗХО происхождение этого яда не установила. Кроме того, эксперты <a href="https://www.rbc.ru/politics/18/04/2018/5ad73ccf9a7947ef075fa037">не обнаружили</a> в пробах, которые они отобрали на месте отравления Скрипалей, следов химического вещества BZ.
+Сергей Скрипаль и Юлия были обнаружены в британском городе Солсбери 4 марта. Они были в бессознательном состоянии. Власти Великобритании считают Москву причастной к их отравлению «Новичком». Кремль все обвинения отрицает.</body></html>
+''')
 
 
 def echo(bot, update):
