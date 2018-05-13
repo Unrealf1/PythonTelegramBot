@@ -42,15 +42,36 @@ def new_docs(bot, update):
         if status != "working":
             update.message.reply_text("I'm sorry, now updating...")
         else:
+            amount = int(inp[1])
             bot_parser.Themes.create_table()
             bot_parser.Docs.create_table()
-            out_docs = bot_parser.Docs.select().order_by(bot_parser.Docs.last_update.desc()).limit(10)
+            out_docs = bot_parser.Docs.select().order_by(bot_parser.Docs.last_update.desc()).limit(amount)
             for doc in out_docs:
                 '''name = peewee.CharField(null=False)
                     theme = peewee.CharField(null=False)
                     description = peewee.CharField(null=True)
                     link = peewee.CharField(null=False)'''
-                update.message.reply_text("Name: " + doc.name + '\n' "On theme: " + doc.theme)
+                update.message.reply_text("Name: " + doc.name + "\nOn theme: " + doc.theme + "\nDescription: " + doc.description + "\nSourse: " + doc.link + "\nLast updated: " + str(doc.last_update))
+
+    else:
+        update.message.reply_text("Incorrect input")
+
+
+def new_themes(bot, update):
+    inp = update.message.text.split()
+    if len(inp) == 2:
+        if status != "working":
+            update.message.reply_text("I'm sorry, now updating...")
+        else:
+            amount = int(inp[1])
+            bot_parser.Themes.create_table()
+            out_themes = bot_parser.Themes.select().order_by(bot_parser.Themes.last_update.desc()).limit(amount)
+            for theme in out_themes:
+                '''name = peewee.CharField(null=False)
+                    theme = peewee.CharField(null=False)
+                    description = peewee.CharField(null=True)
+                    link = peewee.CharField(null=False)'''
+                update.message.reply_text("Name: " + theme.name + "\nDescription: " + theme.description + "\nSourse: " + theme.link_rbc + "\nLast updated: " + str(theme.last_update))
 
     else:
         update.message.reply_text("Incorrect input")
@@ -87,6 +108,7 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("new_docs", new_docs))
+    dp.add_handler(CommandHandler("new_themes", new_themes))
     dp.add_handler(CommandHandler("update", upd))
     dp.add_handler(CommandHandler("get_status", get_status))
 
