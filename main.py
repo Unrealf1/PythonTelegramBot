@@ -46,7 +46,11 @@ def new_docs(bot, update):
             bot_parser.Docs.create_table()
             out_docs = bot_parser.Docs.select().order_by(bot_parser.Docs.last_update.desc()).limit(10)
             for doc in out_docs:
-                update.message.reply_text(doc)
+                '''name = peewee.CharField(null=False)
+                    theme = peewee.CharField(null=False)
+                    description = peewee.CharField(null=True)
+                    link = peewee.CharField(null=False)'''
+                update.message.reply_text("Name: " + doc.name + '\n' "On theme: " + doc.theme)
 
     else:
         update.message.reply_text("Incorrect input")
