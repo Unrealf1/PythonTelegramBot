@@ -1,5 +1,6 @@
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
+import re
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -17,33 +18,7 @@ def start(bot, update):
 
 def help(bot, update):
     """Send a message when the command /help is issued."""
-    update.message.reply_text('''<html><body>Постоянное представительство России при Организации по запрещению химического оружия (ОЗХО) получило ответы на свои вопросы, которые возникли после публикации ОЗХО доклада по «делу Скрипаля». Об этом  сообщил постпред России при организации Александр Шульгин.
-«У нас возникли вопросы к этому докладу, в частности, складывалось впечатление, что эксперты организации искали только то вещество, которое указали британцы. Непонятно было, откуда взялся [химикат] BZ, почему нужно было проверять сертифицированную лабораторию, посылать туда контрольную пробу», — сказал он.
-
-
-        Спор на новом уровне: чего ждать Москве от доклада ОЗХО о «деле Скрипаля»
-    
-
-
-            Политика
-        
-
-
-По словам Шульгина, ответ ОЗХО — «сугубо технический», его необходимо изучить на экспертном уровне. «Дальше мы будем уже определяться», — добавил он. Как отметил дипломат, по данным российской стороны, ОЗХО сейчас «не играет никакой роли в расследовании инцидента в Солсбери».
-
-
-        Лавров рассказал о признаках отравления Скрипалей веществом BZ
-    
-
-
-            Политика
-        
-
-</div>
-Группа экспертов ОЗХО по запросу Лондона начала расследование «дела Скрипаля» в середине марта. 11 апреля организация передала полную версию отчета Великобритании. На следующий день по просьбе британской стороны ОЗХО распространила рассекреченное резюме документа.
-В организации подтвердили, что при отравлении бывшего полковника ГРУ Сергея Скрипаля и его дочери Юлии <a href="https://www.rbc.ru/politics/12/04/2018/5acf2ccc9a794721fa1bfbcd">было использовано</a> нервно-паралитическое вещество «Новичок». При этом ОЗХО происхождение этого яда не установила. Кроме того, эксперты <a href="https://www.rbc.ru/politics/18/04/2018/5ad73ccf9a7947ef075fa037">не обнаружили</a> в пробах, которые они отобрали на месте отравления Скрипалей, следов химического вещества BZ.
-Сергей Скрипаль и Юлия были обнаружены в британском городе Солсбери 4 марта. Они были в бессознательном состоянии. Власти Великобритании считают Москву причастной к их отравлению «Новичком». Кремль все обвинения отрицает.</body></html>
-''')
+    update.message.reply_text("How can I help you?")
 
 
 def echo(bot, update):
@@ -56,6 +31,13 @@ def error(bot, update, error):
     logger.warning('Update "%s" caused error "%s"', update, error)
 
 
+def new_docs(bot, update):
+    inp = update.message.text.split()
+    if len(inp) == 2:
+        update.message.reply_text("Wow, that was a secret!")
+    else:
+        update.message.reply_text("Incorrect input")
+
 def main():
     """Start the bot."""
     # Create the EventHandler and pass it your bot's token.
@@ -67,6 +49,7 @@ def main():
     # on different commands - answer in Telegram
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
+    dp.add_handler(CommandHandler("new_docs", new_docs))
 
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
