@@ -43,56 +43,60 @@ def clean_text(text):
     return text
 
 
-print("creating database...")
+def pars_main():
+    print("creating database...")
 
-Themes.create_table()
-Docs.create_table()
+    Themes.create_table()
+    Docs.create_table()
 
-themes = get_rbcstyle_themes('https://www.rbc.ru/story/', 'item_story')
+    themes = get_rbcstyle_themes('https://www.rbc.ru/story/', 'item_story')
 
-for theme in themes:
-    theme_name = theme.contents[1].contents[1].contents[0]
-    print("name: " + theme_name)
-    theme_description = str(theme.contents[1].contents[3].contents[0]).strip()
-    print("description: ", theme_description)
-    theme_link = re.findall(r"\"https\S*\"", str(theme))[0][1:-1]
-    print("link: " + theme_link)
+    for theme in themes:
+        theme_name = theme.contents[1].contents[1].contents[0]
+        print("name: " + theme_name)
+        theme_description = str(theme.contents[1].contents[3].contents[0]).strip()
+        print("description: ", theme_description)
+        theme_link = re.findall(r"\"https\S*\"", str(theme))[0][1:-1]
+        print("link: " + theme_link)
 
-    old = Themes.select().where(Themes.link_rbc == theme_link)
-    if len(old) == 0:
-        cur_theme = Themes.create(name=theme_name, description=theme_description, link_rbc=theme_link)
-    else:
-        cur_theme = old[0]
-    print()
-    docs = get_rbcstyle_themes(theme_link, 'item_story-single')
-    last_time = dateparser.parse('1488')
-    for doc in docs:
-        doc_time = doc.contents[3].contents[1].contents[0]
-        print("  doc_time: ", doc_time)
-        doc_name = doc.contents[1].contents[1].contents[0]
-        print("  doc_name: " + doc_name)
-        doc_description = doc.contents[1].contents[3].contents[0].strip()
-        print("  doc_description: ", doc_description)
-        doc_link = re.findall(r"\"https\S*\"", str(doc))[0][1:-1]
-        print("  doc_link: " + doc_link)
-        doc_page = requests.get(doc_link)
-        doc_soup = BeautifulSoup(doc_page.text, 'html.parser')
-        doc_tags = doc_soup.find_all(class_ = 'article__tags__link')
-        print("  doc_tags:")
-        for i in range(len(doc_tags)):
-            doc_tags[i] = str(doc_tags[i])
-            doc_tags[i] = re.search(r'>.*<', doc_tags[i]).group(0)[1:-1]
-            print("    " + doc_tags[i])
-        # print(doc_soup.findAll('p')[0])
-        doc_text = ''
-        for paragraph in doc_soup.findAll('p'):
-            doc_text += str(paragraph)[3:-4] + '\n'
-
-        doc_text = clean_text(doc_text)
-        if dateparser.parse(doc_time) > cur_theme.last_update:
-            Docs.create(name=doc_name, theme=theme_name, description=doc_description, link=doc_link, last_update=dateparser.parse(doc_time), text=doc_text)
-        if dateparser.parse(doc_time) > last_time:
-            last_time = dateparser.parse(doc_time)
+        old = Themes.select().where(Themes.link_rbc == theme_link)
+        if len(old) == 0:
+            cur_theme = Themes.create(name=theme_name, description=theme_description, link_rbc=theme_link)
+        else:
+            cur_theme = old[0]
         print()
-    cur_theme.last_update = max(last_time, cur_theme.last_update)
-    cur_theme.save()
+        docs = get_rbcstyle_themes(theme_link, 'item_story-single')
+        last_time = dateparser.parse('1488')
+        for doc in docs:
+            doc_time = doc.contents[3].contents[1].contents[0]
+            print("  doc_time: ", doc_time)
+            doc_name = doc.contents[1].contents[1].contents[0]
+            print("  doc_name: " + doc_name)
+            doc_description = doc.contents[1].contents[3].contents[0].strip()
+            print("  doc_description: ", doc_description)
+            doc_link = re.findall(r"\"https\S*\"", str(doc))[0][1:-1]
+            print("  doc_link: " + doc_link)
+            doc_page = requests.get(doc_link)
+            doc_soup = BeautifulSoup(doc_page.text, 'html.parser')
+            doc_tags = doc_soup.find_all(class_ = 'article__tags__link')
+            print("  doc_tags:")
+            for i in range(len(doc_tags)):
+                doc_tags[i] = str(doc_tags[i])
+                doc_tags[i] = re.search(r'>.*<', doc_tags[i]).group(0)[1:-1]
+                print("    " + doc_tags[i])
+            # print(doc_soup.findAll('p')[0])
+            doc_text = ''
+            for paragraph in doc_soup.findAll('p'):
+                doc_text += str(paragraph)[3:-4] + '\n'
+
+            doc_text = clean_text(doc_text)
+            if dateparser.parse(doc_time) > cur_theme.last_update:
+                Docs.create(name=doc_name, theme=theme_name, description=doc_description, link=doc_link, last_update=dateparser.parse(doc_time), text=doc_text)
+            if dateparser.parse(doc_time) > last_time:
+                last_time = dateparser.parse(doc_time)
+            print()
+        cur_theme.last_update = max(last_time, cur_theme.last_update)
+        cur_theme.save()
+
+if __name__ == "__main__":
+    pars_main()
