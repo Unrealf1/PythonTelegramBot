@@ -38,9 +38,9 @@ def help(bot, update):
 def echo(bot, update):
     """Echo the user message."""
     if len(update.message.text) > 0 and update.message.text[0] == '/':
-        update.message.reply_text("Oh, don't now what to do!\n Please, try /help to know my powers")
+        update.message.reply_text("Oh, don't now what to do!\nPlease, try /help to know my powers")
     else:
-        update.message.reply_text("Sorry, I can't talk now...\n Try /help to know my powers!")
+        update.message.reply_text("Sorry, I can't talk now...\nTry /help to know my powers!")
 
 
 def error(bot, update, error):
@@ -168,12 +168,12 @@ def get_words(bot, update):
                 update.message.reply_text("Sorry, no topics with this name")
             for doc in out_docs:
                 for teg in bot_parser.Tegs.select().where(bot_parser.Tegs.link == doc.link):
-                    words[str(teg)] += 1
+                    words[teg] += 1
 
-            keys = words.keys().sorted()
+            srt = sorted(words, key=words.get)
             answer = ''
-            for i in range(min(len(keys), 5)):
-                answer += words[i]
+            for i in range(len(srt), 5):
+                answer += srt[i]
             update.message.reply_text(answer)
 
     else:
