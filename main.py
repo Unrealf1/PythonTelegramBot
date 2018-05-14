@@ -3,9 +3,9 @@ import logging
 import re
 import peewee
 import bot_parser
+import collections
 db = peewee.SqliteDatabase('news.db')
 status = "Initializing"
-
 
 # Enable logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -37,7 +37,10 @@ def help(bot, update):
 
 def echo(bot, update):
     """Echo the user message."""
-    update.message.reply_text(update.message.text)
+    if len(update.message.text) > 0 and update.message.text[0] == '/':
+        update.message.reply_text("Oh, don't now what to do!\n Please, try /help to know my powers")
+    else:
+        update.message.reply_text("Sorry, I can't talk now...")
 
 
 def error(bot, update, error):
@@ -65,7 +68,7 @@ def new_docs(bot, update):
         update.message.reply_text("Incorrect input")
 
 
-def new_themes(bot, update):
+def new_topics(bot, update):
     inp = update.message.text.split()
     if len(inp) == 2:
         if status != "working":
@@ -148,10 +151,39 @@ def get_doc(bot, update):
     else:
         update.message.reply_text("Enter doc name")
 
+
+def get_words(bot, update):
+    name = (update.message.text[len("/words"):]).strip()
+    if len(name) > 0:
+        if status != "working":
+            update.message.reply_text("I'm sorry, now updating...")
+        else:
+            bot_parser.Docs.create_table()
+            bot_parser.Tegs.create_table()
+            bot_parser.Themes.create_table()
+            words = collections.defaultdict()
+            out_docs = bot_parser.Docs.select().where(bot_parser.Docs.theme == name).limit(20)
+
+            if len(out_docs) == 0:
+                update.message.reply_text("Sorry, no topics with this name")
+            for doc in out_docs:
+                for teg in bot_parser.Tegs.select().where(bot_parser.Tegs.link == doc.link):
+                    words[teg] += 1
+
+            keys = words.keys().sorted()
+            answer = ''
+            for i in range(min(len(keys), 5)):
+                answer += words[i]
+            update.message.reply_text(answer)
+
+    else:
+        update.message.reply_text("Enter topic name")
+
+
 def main():
     global status
     """Start the bot."""
-    # Create the EventHandler and pass it your bot's token.
+    # Create the EventHandler
     updater = Updater('591724946:AAEj1zLLO9zP6Sc2sWjLePR4siqTHPoJXVs')
 
     # Get the dispatcher to register handlers
@@ -161,12 +193,12 @@ def main():
     dp.add_handler(CommandHandler("start", start))
     dp.add_handler(CommandHandler("help", help))
     dp.add_handler(CommandHandler("new_docs", new_docs))
-    dp.add_handler(CommandHandler("new_themes", new_themes))
+    dp.add_handler(CommandHandler("new_topics", new_topics))
     dp.add_handler(CommandHandler("update", upd))
     dp.add_handler(CommandHandler("get_status", get_status))
     dp.add_handler(CommandHandler("topic", topic))
     dp.add_handler(CommandHandler("doc", get_doc))
-
+    dp.add_handler(CommandHandler("words", get_words))
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
 

@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import re
 import peewee
 import dateparser
-from datetime import date
 
 
 db = peewee.SqliteDatabase('news.db')
@@ -32,6 +31,15 @@ class Docs(peewee.Model):
         db_table = 'Docs'
 
 
+class Tegs(peewee.Model):
+    teg = peewee.CharField(null=False)
+    link = peewee.CharField(null=False)
+
+    class Meta:
+        database = db
+        db_table = 'Tegs'
+
+
 def get_rbcstyle_themes(url, class_name):
     page = requests.get(url)
     soup = BeautifulSoup(page.text, 'html.parser')
@@ -48,6 +56,7 @@ def pars_main():
 
     Themes.create_table()
     Docs.create_table()
+    Tegs.create_table()
 
     themes = get_rbcstyle_themes('https://www.rbc.ru/story/', 'item_story')
 
@@ -84,6 +93,7 @@ def pars_main():
                 doc_tags[i] = str(doc_tags[i])
                 doc_tags[i] = re.search(r'>.*<', doc_tags[i]).group(0)[1:-1]
                 print("    " + doc_tags[i])
+                Tegs.create(teg=doc_tags[i], link=doc_link)
             # print(doc_soup.findAll('p')[0])
             doc_text = ''
             for paragraph in doc_soup.findAll('p'):
