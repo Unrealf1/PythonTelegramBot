@@ -109,7 +109,4 @@ def pars_main():
         cur_theme.save()
 
 if __name__ == "__main__":
-    import matplotlib.pyplot as plt
-
-
     pars_main()
