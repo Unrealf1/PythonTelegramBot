@@ -173,7 +173,7 @@ def get_words(bot, update):
             srt = sorted(words, key=words.get)
             answer = 'words are: '
             for i in range(min(len(srt), 5)):
-                answer += srt[i].teg + ', '
+                answer += srt[i] + ', '
             update.message.reply_text(answer + '.')
 
     else:
