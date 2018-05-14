@@ -4,6 +4,8 @@ import re
 import peewee
 import bot_parser
 import collections
+import supply_func
+
 db = peewee.SqliteDatabase('news.db')
 status = "Initializing"
 
@@ -174,7 +176,75 @@ def get_words(bot, update):
             answer = 'words are: '
             for i in range(min(len(srt), 5)):
                 answer += srt[i] + ', '
-            update.message.reply_text(answer + '.')
+            update.message.reply_text(answer[:-1])
+
+    else:
+        update.message.reply_text("Enter topic name")
+
+
+def describe_doc(bot, update):
+    name = (update.message.text[len("/describe_doc"):]).strip()
+    if len(name) > 0:
+        if status != "working":
+            update.message.reply_text("I'm sorry, now updating...")
+        else:
+            bot_parser.Docs.create_table()
+            out_docs = bot_parser.Docs.select().where(bot_parser.Docs.name == name).limit(1)
+
+            if len(out_docs) == 0:
+                update.message.reply_text("Sorry, no topics with this name")
+            word_statistics = collections.defaultdict(int)
+            len_statistics = collections.defaultdict(int)
+            for doc in out_docs:
+                words = re.findall(r'\w+', doc.text)
+                for word in words:
+                    word_statistics[word] += 1
+                    len_statistics[len(word)] += 1
+
+            plots = supply_func.get_plots(word_statistics, len_statistics)
+
+            chat_id = update["message"]["chat"]["id"]
+
+            for plot in plots:
+                bot.send_photo(chat_id=chat_id, photo=open(plot, "rb"))
+
+            supply_func.clear_plots(plots)
+
+    else:
+        update.message.reply_text("Enter doc name")
+
+
+def describe_topic(bot, update):
+    name = (update.message.text[len("/describe_topic"):]).strip()
+    if len(name) > 0:
+        if status != "working":
+            update.message.reply_text("I'm sorry, now updating...")
+        else:
+            bot_parser.Docs.create_table()
+            out_docs = bot_parser.Docs.select().where(bot_parser.Docs.theme == name)
+            if len(out_docs) == 0:
+                update.message.reply_text("Sorry, no topics with this name")
+                return
+
+            word_statistics = collections.defaultdict(int)
+            len_statistics = collections.defaultdict(int)
+            doc_len_statistics = collections.defaultdict(int)
+            for doc in out_docs:
+                words = re.findall(r'\w+', doc.text)
+                doc_len_statistics[len(words)] += 1
+                for word in words:
+                    word_statistics[word] += 1
+                    len_statistics[len(word)] += 1
+
+            plots = supply_func.get_plots(word_statistics, len_statistics)
+            super_plot = supply_func.get_docs_plot(doc_len_statistics)
+
+            chat_id = update["message"]["chat"]["id"]
+            update.message.reply_text('В теме %d документов' % len(out_docs))
+            for plot in plots:
+                bot.send_photo(chat_id=chat_id, photo=open(plot, "rb"))
+
+            supply_func.clear_plots((plots[0], plots[1], super_plot))
 
     else:
         update.message.reply_text("Enter topic name")
@@ -199,6 +269,9 @@ def main():
     dp.add_handler(CommandHandler("topic", topic))
     dp.add_handler(CommandHandler("doc", get_doc))
     dp.add_handler(CommandHandler("words", get_words))
+    dp.add_handler(CommandHandler("describe_doc", describe_doc))
+    dp.add_handler(CommandHandler("describe_topic", describe_topic))
+
     # on noncommand i.e message - echo the message on Telegram
     dp.add_handler(MessageHandler(Filters.text, echo))
 
