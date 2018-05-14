@@ -98,6 +98,7 @@ def upd(bot, update):
             update.message.reply_text("Going to update, master")
             status = "updating"
             bot_parser.pars_main()
+            update.message.reply_text("Update finished")
             status = "working"
 
 
@@ -142,12 +143,8 @@ def get_doc(bot, update):
             if len(out_docs) == 0:
                 update.message.reply_text("Sorry, no topics with this name")
             for doc in out_docs:
-                '''name = peewee.CharField(null=False)
-                    theme = peewee.CharField(null=False)
-                    description = peewee.CharField(null=True)
-                    link = peewee.CharField(null=False)'''
                 update.message.reply_text(
-                    "Name: " + doc.name + "\nOn theme: " + doc.theme + "\nDescription: " + doc.description + "\nSourse: " + doc.link + "\nLast updated: " + str(
+                    doc.text + "\nLast updated: " + str(
                         doc.last_update))
 
     else:

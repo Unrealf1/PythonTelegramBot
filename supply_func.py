@@ -1,6 +1,16 @@
 import matplotlib.pyplot as plt
 import os
+import peewee
+import bot_parser
 
+
+def clean_all_texts():
+    db = peewee.SqliteDatabase('news.db')
+    bot_parser.Docs.create_table()
+    docs = bot_parser.Docs.select()
+    for doc in docs:
+        doc.text = bot_parser.clean_text(doc.text)
+        doc.save()
 
 def clear_plots(plots):
     for plot in plots:

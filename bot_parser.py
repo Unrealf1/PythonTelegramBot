@@ -48,6 +48,8 @@ def get_rbcstyle_themes(url, class_name):
 
 def clean_text(text):
     text = re.sub(r'<.*>', '', text, re.DOTALL)
+    text = re.sub(r'<.*>', '', text, re.DOTALL)
+    text = re.sub(r'<.*>', '', text, re.DOTALL)
     return text
 
 
