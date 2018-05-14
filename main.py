@@ -24,21 +24,14 @@ def start(bot, update):
 def help(bot, update):
     """Send a message when the command /help is issued."""
     update.message.reply_text('''commands:
-    help - показать все, что может бот
-new_docs <N> - показать N самых свежих новостей
-new_topics <N> - показать N самых свежих тем
-topic <topic_name> - показать описание темы и заголовки 5 самых свежих новостей в этой теме
-doc <doc_title> - показать текст документа с заданным заголовком
-words <topic_name> - показать 5 слов, лучше всего характеризующих тему. Алгоритм оценки слов выберите/придумайте сами
-describe_doc <doc_title> - вывести статистику по документу. Статистика:
-распределение частот слов 
-распределение длин слов
-<свой вариант, который по-вашему мнению полезно было бы знать>
-describe_topic <topic_name> - вывести статистику по теме. Статистика:
-количество документов в теме
-средняя длина документов
-распределение частот слов в рамках всей темы
-распределение длин слов в рамках всей темы
+/help - показать все, что может бот
+/new_docs <N> - показать N самых свежих новостей
+/new_topics <N> - показать N самых свежих тем
+/topic <topic_name> - показать описание темы и заголовки 5 самых свежих новостей в этой теме
+/doc <doc_title> - показать текст документа с заданным заголовком
+/words <topic_name> - показать 5 слов, лучше всего характеризующих тему. Алгоритм оценки слов выберите/придумайте сами
+/describe_doc <doc_title> - вывести статистику по документу.
+/describe_topic <topic_name> - вывести статистику по теме.
 ''')
 
 
@@ -111,12 +104,11 @@ def get_status(bot, update):
 
 
 def topic(bot, update):
-    inp = update.message.text.split()
-    if len(inp) == 2:
+    name = (update.message.text[len("/topic"):]).strip()
+    if len(name) > 0:
         if status != "working":
             update.message.reply_text("I'm sorry, now updating...")
         else:
-            name = inp[1]
             bot_parser.Docs.create_table()
             out_docs = bot_parser.Docs.select().where(bot_parser.Docs.theme == name).limit(5)
 
@@ -130,16 +122,15 @@ def topic(bot, update):
                 update.message.reply_text("Name: " + doc.name + "\nOn theme: " + doc.theme + "\nDescription: " + doc.description + "\nSourse: " + doc.link + "\nLast updated: " + str(doc.last_update))
 
     else:
-        update.message.reply_text("Incorrect input")
+        update.message.reply_text("Enter topic name")
 
 
 def get_doc(bot, update):
-    inp = update.message.text.split()
-    if len(inp) == 2:
+    name = (update.message.text[len("/doc"):]).strip()
+    if len(name) > 0:
         if status != "working":
             update.message.reply_text("I'm sorry, now updating...")
         else:
-            name = inp[1]
             bot_parser.Docs.create_table()
             out_docs = bot_parser.Docs.select().where(bot_parser.Docs.name == name).limit(1)
 
@@ -155,7 +146,7 @@ def get_doc(bot, update):
                         doc.last_update))
 
     else:
-        update.message.reply_text("Incorrect input")
+        update.message.reply_text("Enter doc name")
 
 def main():
     global status
