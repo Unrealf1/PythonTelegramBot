@@ -40,7 +40,7 @@ def echo(bot, update):
     if len(update.message.text) > 0 and update.message.text[0] == '/':
         update.message.reply_text("Oh, don't now what to do!\n Please, try /help to know my powers")
     else:
-        update.message.reply_text("Sorry, I can't talk now...")
+        update.message.reply_text("Sorry, I can't talk now...\n Try /help to know my powers!")
 
 
 def error(bot, update, error):
@@ -161,14 +161,14 @@ def get_words(bot, update):
             bot_parser.Docs.create_table()
             bot_parser.Tegs.create_table()
             bot_parser.Themes.create_table()
-            words = collections.defaultdict()
+            words = collections.defaultdict(int)
             out_docs = bot_parser.Docs.select().where(bot_parser.Docs.theme == name).limit(20)
 
             if len(out_docs) == 0:
                 update.message.reply_text("Sorry, no topics with this name")
             for doc in out_docs:
                 for teg in bot_parser.Tegs.select().where(bot_parser.Tegs.link == doc.link):
-                    words[teg] += 1
+                    words[str(teg)] += 1
 
             keys = words.keys().sorted()
             answer = ''
