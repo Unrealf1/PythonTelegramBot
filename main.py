@@ -171,10 +171,10 @@ def get_words(bot, update):
                     words[teg] += 1
 
             srt = sorted(words, key=words.get)
-            answer = ''
-            for i in range(len(srt), 5):
-                answer += srt[i]
-            update.message.reply_text(answer)
+            answer = 'words are: '
+            for i in range(min(len(srt), 5)):
+                answer += srt[i] + ', '
+            update.message.reply_text(answer + '.')
 
     else:
         update.message.reply_text("Enter topic name")
