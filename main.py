@@ -168,12 +168,12 @@ def get_words(bot, update):
                 update.message.reply_text("Sorry, no topics with this name")
             for doc in out_docs:
                 for teg in bot_parser.Tegs.select().where(bot_parser.Tegs.link == doc.link):
-                    words[teg] += 1
+                    words[teg.teg] += 1
 
             srt = sorted(words, key=words.get)
             answer = 'words are: '
             for i in range(min(len(srt), 5)):
-                answer += srt[i] + ', '
+                answer += srt[i].teg + ', '
             update.message.reply_text(answer + '.')
 
     else:
