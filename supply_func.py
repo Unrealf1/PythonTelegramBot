@@ -12,6 +12,7 @@ def clean_all_texts():
         doc.text = bot_parser.clean_text(doc.text)
         doc.save()
 
+
 def clear_plots(plots):
     for plot in plots:
         os.remove(plot)
