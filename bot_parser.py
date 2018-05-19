@@ -56,8 +56,10 @@ def get_class_from_page(url, class_name):
 def clean_text(text):
     while re.search(r'<.*>', text, re.DOTALL) is not None:
         text = re.sub(r'<.*>', '', text, re.DOTALL)
-    while re.search(r'  +', text, re.DOTALL) is not None:
-        text = re.sub(r'  +', ' ', text, re.DOTALL)
+    while re.search(r'  +', text) is not None:
+        text = re.sub(r'  +', ' ', text)
+    while re.search(r'\n\n+', text) is not None:
+        text = re.sub(r'\n\n+', ' ', text)
     return text
 
 
